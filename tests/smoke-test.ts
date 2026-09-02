@@ -272,6 +272,7 @@ const cases: {
     run: async () => {
       const capabilityRequestList = await client.capabilityRequests.create(
         '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+        {},
       );
     },
   },
@@ -1804,9 +1805,7 @@ const cases: {
     path: '/v1/charges/{id}/refund',
     label: 'required params',
     run: async () => {
-      const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-        amount: 5000,
-      });
+      const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7');
     },
   },
 
@@ -2171,9 +2170,7 @@ const cases: {
     path: '/v1/payouts/{id}/hold',
     label: 'required params',
     run: async () => {
-      const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-        reason: '',
-      });
+      const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7');
     },
   },
 
@@ -2199,9 +2196,7 @@ const cases: {
     path: '/v1/payouts/{id}/release',
     label: 'required params',
     run: async () => {
-      const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-        reason: '',
-      });
+      const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7');
     },
   },
 
@@ -2227,9 +2222,7 @@ const cases: {
     path: '/v1/payouts/{id}/cancel',
     label: 'required params',
     run: async () => {
-      const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-        reason: '',
-      });
+      const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7');
     },
   },
 

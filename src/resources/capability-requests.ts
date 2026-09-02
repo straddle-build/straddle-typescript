@@ -12,18 +12,21 @@ export class CapabilityRequests extends APIResource {
    * Creates one or more capability requests for an account and returns the resulting requests.
    *
    * @param {string} accountID - The ID of the account.
-   * @param {CapabilityRequestCreateParams} [params] - The parameters to send with the request.
+   * @param {CapabilityRequestCreateParams} params - The parameters to send with the request.
    * @param {RequestOptions} [options] - Options to apply to the request, such as headers and an abort signal.
    * @returns {APIPromise<CapabilityRequestList>} Created
    *
    * @example
    * ```ts
-   * const capabilityRequestList = await client.capabilityRequests.create('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+   * const capabilityRequestList = await client.capabilityRequests.create(
+   *   '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+   *   {},
+   * );
    * ```
    */
   create(
     accountID: string,
-    params: CapabilityRequestCreateParams | null | undefined = {},
+    params: CapabilityRequestCreateParams,
     options?: RequestOptions,
   ): APIPromise<CapabilityRequestList> {
     const {
@@ -31,7 +34,7 @@ export class CapabilityRequests extends APIResource {
       'Correlation-Id': correlationID,
       'Idempotency-Key': idempotencyKey,
       ...body
-    } = params ?? {};
+    } = params;
     return this._client.post(__scalarPath`/v1/accounts/${accountID}/capability_requests`, {
       body,
       ...options,

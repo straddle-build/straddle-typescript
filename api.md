@@ -220,7 +220,10 @@ Creates one or more capability requests for an account and returns the resulting
 | Response | [`CapabilityRequestList`](./src/resources/capability-requests.ts) |
 
 ```ts
-const capabilityRequestList = await client.capabilityRequests.create('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+const capabilityRequestList = await client.capabilityRequests.create(
+  '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+  {},
+);
 ```
 
 ### List capability requests
@@ -985,9 +988,7 @@ Creates a payout to return funds from a paid charge to the customer's bank accou
 | Response | [`PayoutResponse`](./src/resources/charges.ts) |
 
 ```ts
-const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-  amount: 5000,
-});
+const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7');
 ```
 
 ### Upload a proof-of-authorization document for a charge
@@ -1160,9 +1161,7 @@ Places a payout on hold to prevent submission for processing. The payout must ha
 | Request | [`PayoutHoldParams`](./src/resources/payouts.ts) |
 
 ```ts
-const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-  reason: '',
-});
+const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7');
 ```
 
 ### Release a payout
@@ -1174,9 +1173,7 @@ Releases a payout from `on_hold` and returns it to `created` for submission on `
 | Request | [`PayoutReleaseParams`](./src/resources/payouts.ts) |
 
 ```ts
-const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-  reason: '',
-});
+const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7');
 ```
 
 ### Cancel a payout
@@ -1188,9 +1185,7 @@ Cancels a payout. The payout must have a status of `created`, `scheduled`, or `o
 | Request | [`PayoutCancelParams`](./src/resources/payouts.ts) |
 
 ```ts
-const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-  reason: '',
-});
+const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7');
 ```
 
 ### Get an unmasked payout

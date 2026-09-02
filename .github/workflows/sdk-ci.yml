@@ -21,6 +21,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - run: npm install
       - run: npm run build
+      - run: node --test scripts/*.test.mjs
       # Verification only, never auto-fix: the SDK is generated formatted, so a diff here means
       # either hand-edited custom code or a regenerate that was not committed. Auto-fixing would
       # make the pushed bytes differ from generator output. `format` without `--write` is already

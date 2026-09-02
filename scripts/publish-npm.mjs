@@ -28,7 +28,7 @@ export const npmDistTagForVersion = (version) => {
 /** Runs one npm command with inherited CI credentials and output. */
 const runNpm = (args, stdio = 'inherit') => spawnSync('npm', args, { stdio });
 
-/** Publishes the repository package once, applying a derived prerelease dist-tag when needed. */
+/** Publishes the repository package once with an explicit npm dist-tag. */
 export const publishNpm = (runner = runNpm, metadata = readPackageMetadata()) => {
   const { name, version } = metadata;
   const packageSpec = `${name}@${version}`;
@@ -37,11 +37,9 @@ export const publishNpm = (runner = runNpm, metadata = readPackageMetadata()) =>
     return;
   }
 
-  const tag = npmDistTagForVersion(version);
-  const args = ['publish', '--access', 'public', ...(tag ? ['--tag', tag] : [])];
-  console.log(
-    tag ? `Publishing ${packageSpec} to npm with dist-tag ${tag}` : `Publishing ${packageSpec} to npm`,
-  );
+  const tag = npmDistTagForVersion(version) ?? 'latest';
+  const args = ['publish', '--access', 'public', '--tag', tag];
+  console.log(`Publishing ${packageSpec} to npm with dist-tag ${tag}`);
   const result = runner(args);
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`npm publish failed with exit code ${result.status ?? 'unknown'}`);

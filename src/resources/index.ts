@@ -101,9 +101,7 @@ export type {
   BridgeCreateBankAccountPaykeyParams,
   BridgeCreatePlaidPaykeyParams,
   BridgeCreateTokenParams,
-  BridgeCreateTanPaykeyParams,
   BridgeCreateQuilttPaykeyParams,
-  BridgeCreateSpeedchexPaykeyParams,
 } from './bridge';
 export { Customers } from './customers/customers';
 export type {
@@ -147,12 +145,6 @@ export type {
   PaykeyRefreshBalanceParams,
   PaykeyUnblockParams,
 } from './paykeys/paykeys';
-export { Reports } from './reports';
-export type {
-  CustomerStatusTotalsResponse,
-  CustomerStatusTotals,
-  ReportCreateCustomerStatusTotalsParams,
-} from './reports';
 export { Charges } from './charges';
 export type {
   ChargeResponse,

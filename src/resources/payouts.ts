@@ -142,20 +142,18 @@ export class Payouts extends APIResource {
    * Places a payout on hold to prevent submission for processing. The payout must have a status of `created` or `scheduled`.
    *
    * @param {string} id - Unique identifier for the payout.
-   * @param {PayoutHoldParams} params - The parameters to send with the request.
+   * @param {PayoutHoldParams} [params] - The parameters to send with the request.
    * @param {RequestOptions} [options] - Options to apply to the request, such as headers and an abort signal.
    * @returns {APIPromise<ChargesAPI.PayoutResponse>} OK
    *
    * @example
    * ```ts
-   * const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-   *   reason: '',
-   * });
+   * const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7');
    * ```
    */
   hold(
     id: string,
-    params: PayoutHoldParams,
+    params: PayoutHoldParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<ChargesAPI.PayoutResponse> {
     const {
@@ -164,7 +162,7 @@ export class Payouts extends APIResource {
       'Correlation-Id': correlationID,
       'Idempotency-Key': idempotencyKey,
       ...body
-    } = params;
+    } = params ?? {};
     return this._client.put(__scalarPath`/v1/payouts/${id}/hold`, {
       body,
       ...options,
@@ -184,20 +182,18 @@ export class Payouts extends APIResource {
    * Releases a payout from `on_hold` and returns it to `created` for submission on `payment_date`.
    *
    * @param {string} id - Unique identifier for the payout.
-   * @param {PayoutReleaseParams} params - The parameters to send with the request.
+   * @param {PayoutReleaseParams} [params] - The parameters to send with the request.
    * @param {RequestOptions} [options] - Options to apply to the request, such as headers and an abort signal.
    * @returns {APIPromise<ChargesAPI.PayoutResponse>} OK
    *
    * @example
    * ```ts
-   * const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-   *   reason: '',
-   * });
+   * const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7');
    * ```
    */
   release(
     id: string,
-    params: PayoutReleaseParams,
+    params: PayoutReleaseParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<ChargesAPI.PayoutResponse> {
     const {
@@ -206,7 +202,7 @@ export class Payouts extends APIResource {
       'Correlation-Id': correlationID,
       'Idempotency-Key': idempotencyKey,
       ...body
-    } = params;
+    } = params ?? {};
     return this._client.put(__scalarPath`/v1/payouts/${id}/release`, {
       body,
       ...options,
@@ -226,20 +222,18 @@ export class Payouts extends APIResource {
    * Cancels a payout. The payout must have a status of `created`, `scheduled`, or `on_hold`.
    *
    * @param {string} id - Unique identifier for the payout.
-   * @param {PayoutCancelParams} params - The parameters to send with the request.
+   * @param {PayoutCancelParams} [params] - The parameters to send with the request.
    * @param {RequestOptions} [options] - Options to apply to the request, such as headers and an abort signal.
    * @returns {APIPromise<ChargesAPI.PayoutResponse>} OK
    *
    * @example
    * ```ts
-   * const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-   *   reason: '',
-   * });
+   * const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7');
    * ```
    */
   cancel(
     id: string,
-    params: PayoutCancelParams,
+    params: PayoutCancelParams | null | undefined = {},
     options?: RequestOptions,
   ): APIPromise<ChargesAPI.PayoutResponse> {
     const {
@@ -248,7 +242,7 @@ export class Payouts extends APIResource {
       'Correlation-Id': correlationID,
       'Idempotency-Key': idempotencyKey,
       ...body
-    } = params;
+    } = params ?? {};
     return this._client.put(__scalarPath`/v1/payouts/${id}/cancel`, {
       body,
       ...options,
@@ -650,7 +644,7 @@ export interface PayoutHoldParams {
   /**
    * Body param: Message explaining the payout status change.
    */
-  reason: string;
+  reason?: string | null;
 }
 
 export interface PayoutReleaseParams {
@@ -676,7 +670,7 @@ export interface PayoutReleaseParams {
   /**
    * Body param: Message explaining the payout status change.
    */
-  reason: string;
+  reason?: string | null;
 }
 
 export interface PayoutCancelParams {
@@ -702,7 +696,7 @@ export interface PayoutCancelParams {
   /**
    * Body param: Message explaining the payout status change.
    */
-  reason: string;
+  reason?: string | null;
 }
 
 export interface PayoutListUnmaskedParams {
@@ -777,7 +771,7 @@ export interface PayoutUploadAuthorizationProofParams {
    */
   'Idempotency-Key'?: string;
   /**
-   * Body param: The document file to upload as proof of authorization for this payout.
+   * Body param: The document file to upload as proof of authorization for this payout. Supported file types are PDF (.pdf), PNG (.png), JPEG (.jpg, .jpeg), Word (.doc), and Word (.docx), with a maximum file size of 10 MiB (10,485,760 bytes). Empty (0-byte) files are rejected. Uploaded files are validated for matching file signatures (magic bytes) and file extension agreement.
    * @format binary
    */
   File: Uploadable;

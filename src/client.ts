@@ -126,7 +126,9 @@ import {
   type BridgeCreateBankAccountPaykeyParams,
   type BridgeCreatePlaidPaykeyParams,
   type BridgeCreateTokenParams,
+  type BridgeCreateTanPaykeyParams,
   type BridgeCreateQuilttPaykeyParams,
+  type BridgeCreateSpeedchexPaykeyParams,
 } from './resources/bridge';
 import {
   Customers,
@@ -170,6 +172,12 @@ import {
   type PaykeyRefreshBalanceParams,
   type PaykeyUnblockParams,
 } from './resources/paykeys/paykeys';
+import {
+  Reports,
+  type CustomerStatusTotalsResponse,
+  type CustomerStatusTotals,
+  type ReportCreateCustomerStatusTotalsParams,
+} from './resources/reports';
 import {
   Charges,
   type ChargeResponse,
@@ -1093,6 +1101,7 @@ export class StraddleAPI {
   bridge: Bridge = new Bridge(this);
   customers: Customers = new Customers(this);
   paykeys: Paykeys = new Paykeys(this);
+  reports: Reports = new Reports(this);
   charges: Charges = new Charges(this);
   fundingEvents: FundingEvents = new FundingEvents(this);
   payments: Payments = new Payments(this);
@@ -1109,6 +1118,7 @@ StraddleAPI.Representatives = Representatives;
 StraddleAPI.Bridge = Bridge;
 StraddleAPI.Customers = Customers;
 StraddleAPI.Paykeys = Paykeys;
+StraddleAPI.Reports = Reports;
 StraddleAPI.Charges = Charges;
 StraddleAPI.FundingEvents = FundingEvents;
 StraddleAPI.Payments = Payments;
@@ -1224,7 +1234,9 @@ export declare namespace StraddleAPI {
     type BridgeCreateBankAccountPaykeyParams as BridgeCreateBankAccountPaykeyParams,
     type BridgeCreatePlaidPaykeyParams as BridgeCreatePlaidPaykeyParams,
     type BridgeCreateTokenParams as BridgeCreateTokenParams,
+    type BridgeCreateTanPaykeyParams as BridgeCreateTanPaykeyParams,
     type BridgeCreateQuilttPaykeyParams as BridgeCreateQuilttPaykeyParams,
+    type BridgeCreateSpeedchexPaykeyParams as BridgeCreateSpeedchexPaykeyParams,
   };
 
   export {
@@ -1269,6 +1281,13 @@ export declare namespace StraddleAPI {
     type PaykeyRefreshReviewParams as PaykeyRefreshReviewParams,
     type PaykeyRefreshBalanceParams as PaykeyRefreshBalanceParams,
     type PaykeyUnblockParams as PaykeyUnblockParams,
+  };
+
+  export {
+    Reports as Reports,
+    type CustomerStatusTotalsResponse as CustomerStatusTotalsResponse,
+    type CustomerStatusTotals as CustomerStatusTotals,
+    type ReportCreateCustomerStatusTotalsParams as ReportCreateCustomerStatusTotalsParams,
   };
 
   export {

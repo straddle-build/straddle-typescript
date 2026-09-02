@@ -337,27 +337,25 @@ export class Charges extends APIResource {
    * Creates a payout to return funds from a paid charge to the customer's bank account. The payout is linked to the charge through `related_payments`. A charge can be refunded once, either fully or partially.
    *
    * @param {string} id - Unique identifier for the charge.
-   * @param {ChargeRefundParams} [params] - The parameters to send with the request.
+   * @param {ChargeRefundParams} params - The parameters to send with the request.
    * @param {RequestOptions} [options] - Options to apply to the request, such as headers and an abort signal.
    * @returns {APIPromise<PayoutResponse>} Created
    *
    * @example
    * ```ts
-   * const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+   * const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+   *   amount: 5000,
+   * });
    * ```
    */
-  refund(
-    id: string,
-    params: ChargeRefundParams | null | undefined = {},
-    options?: RequestOptions,
-  ): APIPromise<PayoutResponse> {
+  refund(id: string, params: ChargeRefundParams, options?: RequestOptions): APIPromise<PayoutResponse> {
     const {
       'Straddle-Account-Id': straddleAccountID,
       'Request-Id': requestID,
       'Correlation-Id': correlationID,
       'Idempotency-Key': idempotencyKey,
       ...body
-    } = params ?? {};
+    } = params;
     return this._client.post(__scalarPath`/v1/charges/${id}/refund`, {
       body,
       ...options,
@@ -1308,7 +1306,7 @@ export interface ChargeRefundParams {
    * Body param: Refund amount in cents. `null` refunds the full original amount. A value must be greater than zero and no more than the original charge amount.
    * @format int32
    */
-  amount?: number | null;
+  amount: number | null;
   /**
    * Body param: Description for the refund payout. Defaults to a description that identifies the original charge.
    */
@@ -1349,7 +1347,7 @@ export interface ChargeUploadAuthorizationProofParams {
    */
   'Idempotency-Key'?: string;
   /**
-   * Body param: The document file to upload as proof of authorization for this charge. Supported file types are PDF (.pdf), PNG (.png), JPEG (.jpg, .jpeg), Word (.doc), and Word (.docx), with a maximum file size of 10 MiB (10,485,760 bytes). Empty (0-byte) files are rejected. Uploaded files are validated for matching file signatures (magic bytes) and file extension agreement.
+   * Body param: The document file to upload as proof of authorization for this charge.
    * @format binary
    */
   File: Uploadable;

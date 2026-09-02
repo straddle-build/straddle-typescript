@@ -129,6 +129,49 @@ export class Bridge extends APIResource {
   }
 
   /**
+   * Creates a paykey from a tokenized account number (TAN).
+   *
+   * @param {BridgeCreateTanPaykeyParams} params - The parameters to send with the request.
+   * @param {RequestOptions} [options] - Options to apply to the request, such as headers and an abort signal.
+   * @returns {APIPromise<RevealedPaykeyResponse>} Created
+   *
+   * @example
+   * ```ts
+   * const revealedPaykey = await client.bridge.createTanPaykey({
+   *   customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+   *   routing_number: '',
+   *   tan: '',
+   *   account_type: 'checking',
+   * });
+   * ```
+   */
+  createTanPaykey(
+    params: BridgeCreateTanPaykeyParams,
+    options?: RequestOptions,
+  ): APIPromise<RevealedPaykeyResponse> {
+    const {
+      'Straddle-Account-Id': straddleAccountID,
+      'Request-Id': requestID,
+      'Correlation-Id': correlationID,
+      'Idempotency-Key': idempotencyKey,
+      ...body
+    } = params;
+    return this._client.post('/v1/bridge/tan', {
+      body,
+      ...options,
+      headers: buildHeaders([
+        {
+          ...(straddleAccountID !== undefined ? { 'Straddle-Account-Id': straddleAccountID } : {}),
+          ...(requestID !== undefined ? { 'Request-Id': requestID } : {}),
+          ...(correlationID !== undefined ? { 'Correlation-Id': correlationID } : {}),
+          ...(idempotencyKey !== undefined ? { 'Idempotency-Key': idempotencyKey } : {}),
+        },
+        options?.headers,
+      ]),
+    });
+  }
+
+  /**
    * Creates a paykey from a Quiltt processor token.
    *
    * @param {BridgeCreateQuilttPaykeyParams} params - The parameters to send with the request.
@@ -155,6 +198,47 @@ export class Bridge extends APIResource {
       ...body
     } = params;
     return this._client.post('/v1/bridge/quiltt', {
+      body,
+      ...options,
+      headers: buildHeaders([
+        {
+          ...(straddleAccountID !== undefined ? { 'Straddle-Account-Id': straddleAccountID } : {}),
+          ...(requestID !== undefined ? { 'Request-Id': requestID } : {}),
+          ...(correlationID !== undefined ? { 'Correlation-Id': correlationID } : {}),
+          ...(idempotencyKey !== undefined ? { 'Idempotency-Key': idempotencyKey } : {}),
+        },
+        options?.headers,
+      ]),
+    });
+  }
+
+  /**
+   * Creates a paykey from a Speedchex token.
+   *
+   * @param {BridgeCreateSpeedchexPaykeyParams} params - The parameters to send with the request.
+   * @param {RequestOptions} [options] - Options to apply to the request, such as headers and an abort signal.
+   * @returns {APIPromise<RevealedPaykeyResponse>} Created
+   *
+   * @example
+   * ```ts
+   * const revealedPaykey = await client.bridge.createSpeedchexPaykey({
+   *   customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+   *   speedchex_token: '',
+   * });
+   * ```
+   */
+  createSpeedchexPaykey(
+    params: BridgeCreateSpeedchexPaykeyParams,
+    options?: RequestOptions,
+  ): APIPromise<RevealedPaykeyResponse> {
+    const {
+      'Straddle-Account-Id': straddleAccountID,
+      'Request-Id': requestID,
+      'Correlation-Id': correlationID,
+      'Idempotency-Key': idempotencyKey,
+      ...body
+    } = params;
+    return this._client.post('/v1/bridge/speedchex', {
       body,
       ...options,
       headers: buildHeaders([
@@ -582,6 +666,57 @@ export interface BridgeCreateTokenParams {
   external_id?: string | null;
 }
 
+export interface BridgeCreateTanPaykeyParams {
+  /**
+   * Header param: For platform requests, the embedded account UUID that sets the request scope.
+   * @format uuid
+   */
+  'Straddle-Account-Id'?: string;
+  /**
+   * Header param: Optional client-generated identifier for tracing one request.
+   */
+  'Request-Id'?: string;
+  /**
+   * Header param: Optional client-generated identifier for tracing a series of related requests.
+   */
+  'Correlation-Id'?: string;
+  /**
+   * Header param: Optional client-generated key for an idempotent request.
+   * @minLength 10
+   * @maxLength 40
+   */
+  'Idempotency-Key'?: string;
+  /**
+   * Body param: Unique identifier for the customer associated with the paykey.
+   * @format uuid
+   */
+  customer_id: string;
+  /**
+   * Body param: Bank routing number.
+   */
+  routing_number: string;
+  /**
+   * Body param: Tokenized account number.
+   */
+  tan: string;
+  /**
+   * Body param
+   */
+  account_type: AccountType;
+  /**
+   * Body param: Up to 20 user-defined key-value pairs associated with the paykey.
+   */
+  metadata?: Record<string, string> | null;
+  /**
+   * Body param
+   */
+  config?: PaykeyConfiguration;
+  /**
+   * Body param: Unique identifier for the paykey in your system.
+   */
+  external_id?: string | null;
+}
+
 export interface BridgeCreateQuilttPaykeyParams {
   /**
    * Header param: For platform requests, the embedded account UUID that sets the request scope.
@@ -624,6 +759,49 @@ export interface BridgeCreateQuilttPaykeyParams {
    */
   external_id?: string | null;
 }
+
+export interface BridgeCreateSpeedchexPaykeyParams {
+  /**
+   * Header param: For platform requests, the embedded account UUID that sets the request scope.
+   * @format uuid
+   */
+  'Straddle-Account-Id'?: string;
+  /**
+   * Header param: Optional client-generated identifier for tracing one request.
+   */
+  'Request-Id'?: string;
+  /**
+   * Header param: Optional client-generated identifier for tracing a series of related requests.
+   */
+  'Correlation-Id'?: string;
+  /**
+   * Header param: Optional client-generated key for an idempotent request.
+   * @minLength 10
+   * @maxLength 40
+   */
+  'Idempotency-Key'?: string;
+  /**
+   * Body param: Unique identifier for the customer associated with the paykey.
+   * @format uuid
+   */
+  customer_id: string;
+  /**
+   * Body param: Speedchex token generated by your application for use with the Straddle API.
+   */
+  speedchex_token: string;
+  /**
+   * Body param: Up to 20 user-defined key-value pairs associated with the paykey.
+   */
+  metadata?: Record<string, string> | null;
+  /**
+   * Body param
+   */
+  config?: PaykeyConfiguration;
+  /**
+   * Body param: Unique identifier for the paykey in your system.
+   */
+  external_id?: string | null;
+}
 export declare namespace Bridge {
   export {
     type PaykeyResponse as PaykeyResponse,
@@ -648,6 +826,8 @@ export declare namespace Bridge {
     type BridgeCreateBankAccountPaykeyParams as BridgeCreateBankAccountPaykeyParams,
     type BridgeCreatePlaidPaykeyParams as BridgeCreatePlaidPaykeyParams,
     type BridgeCreateTokenParams as BridgeCreateTokenParams,
+    type BridgeCreateTanPaykeyParams as BridgeCreateTanPaykeyParams,
     type BridgeCreateQuilttPaykeyParams as BridgeCreateQuilttPaykeyParams,
+    type BridgeCreateSpeedchexPaykeyParams as BridgeCreateSpeedchexPaykeyParams,
   };
 }

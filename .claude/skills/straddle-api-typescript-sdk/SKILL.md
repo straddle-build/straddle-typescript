@@ -1,22 +1,22 @@
 ---
 name: straddle-api-typescript-sdk
-description: "TypeScript SDK for Straddle API. Use when writing TypeScript code that calls Straddle API with the @straddlecom/straddle package: installing it, constructing and authenticating the client, and calling API operations."
+description: "TypeScript SDK for Straddle API. Use when writing TypeScript code that calls Straddle API with the @straddle/straddle package: installing it, constructing and authenticating the client, and calling API operations."
 ---
 
 # Straddle API TypeScript SDK
 
-Generated TypeScript client for Straddle API, published as `@straddlecom/straddle`. Use the generated client instead of hand-writing HTTP requests.
+Generated TypeScript client for Straddle API, published as `@straddle/straddle`. Use the generated client instead of hand-writing HTTP requests.
 
 ## Install
 
 ```sh
-npm install @straddlecom/straddle
+npm install @straddle/straddle
 ```
 
 ## Client setup and authentication
 
 ```ts
-import StraddleAPI from '@straddlecom/straddle';
+import StraddleAPI from '@straddle/straddle';
 
 const client = new StraddleAPI({
   bearer: process.env['BEARER'], // defaults to the BEARER env var
@@ -30,7 +30,7 @@ Provide credentials using the options below. Environment variables are read auto
 ## Calling operations
 
 ```ts
-import StraddleAPI from '@straddlecom/straddle';
+import StraddleAPI from '@straddle/straddle';
 
 const client = new StraddleAPI({
   bearer: process.env['BEARER'], // defaults to the BEARER env var
@@ -48,7 +48,7 @@ Method names, parameter shapes, and response types are generated from the API de
 Non-success responses throw generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
 
 ```ts
-import { APIError } from '@straddlecom/straddle';
+import { APIError } from '@straddle/straddle';
 
 try {
   const account = await client.accounts.retrieve('7c9e6679-7425-40de-944b-e07fc1f90ae7');

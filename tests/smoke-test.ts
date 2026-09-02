@@ -13,7 +13,7 @@ import { writeFileSync } from 'node:fs';
 
 // The package exports the client class. The client reads auth and the base URL from the
 // environment, so it needs no constructor options to point at a server.
-import StraddleAPI from '@straddlecom/straddle';
+import StraddleAPI from '@straddle/straddle';
 
 // One shared client runs every case.
 const client = new StraddleAPI();
@@ -272,7 +272,6 @@ const cases: {
     run: async () => {
       const capabilityRequestList = await client.capabilityRequests.create(
         '7c9e6679-7425-40de-944b-e07fc1f90ae7',
-        {},
       );
     },
   },
@@ -951,6 +950,46 @@ const cases: {
   },
 
   {
+    operation: 'createTanPaykey',
+    method: 'POST',
+    path: '/v1/bridge/tan',
+    label: 'required params',
+    run: async () => {
+      const revealedPaykey = await client.bridge.createTanPaykey({
+        customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+        routing_number: '',
+        tan: '',
+        account_type: 'checking',
+      });
+    },
+  },
+
+  {
+    operation: 'createTanPaykey',
+    method: 'POST',
+    path: '/v1/bridge/tan',
+    label: 'all params',
+    run: async () => {
+      const revealedPaykey = await client.bridge.createTanPaykey({
+        'Straddle-Account-Id': '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+        'Request-Id': 'requestId',
+        'Correlation-Id': 'correlationId',
+        'Idempotency-Key': 'idempotencyKey',
+        customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+        routing_number: '',
+        tan: '',
+        account_type: 'checking',
+        metadata: {},
+        config: {
+          sandbox_outcome: 'standard',
+          processing_method: 'inline',
+        },
+        external_id: '',
+      });
+    },
+  },
+
+  {
     operation: 'createQuilttPaykey',
     method: 'POST',
     path: '/v1/bridge/quiltt',
@@ -976,6 +1015,42 @@ const cases: {
         'Idempotency-Key': 'idempotencyKey',
         customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
         quiltt_token: '',
+        metadata: {},
+        config: {
+          sandbox_outcome: 'standard',
+          processing_method: 'inline',
+        },
+        external_id: '',
+      });
+    },
+  },
+
+  {
+    operation: 'createSpeedchexPaykey',
+    method: 'POST',
+    path: '/v1/bridge/speedchex',
+    label: 'required params',
+    run: async () => {
+      const revealedPaykey = await client.bridge.createSpeedchexPaykey({
+        customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+        speedchex_token: '',
+      });
+    },
+  },
+
+  {
+    operation: 'createSpeedchexPaykey',
+    method: 'POST',
+    path: '/v1/bridge/speedchex',
+    label: 'all params',
+    run: async () => {
+      const revealedPaykey = await client.bridge.createSpeedchexPaykey({
+        'Straddle-Account-Id': '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+        'Request-Id': 'requestId',
+        'Correlation-Id': 'correlationId',
+        'Idempotency-Key': 'idempotencyKey',
+        customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+        speedchex_token: '',
         metadata: {},
         config: {
           sandbox_outcome: 'standard',
@@ -1557,6 +1632,30 @@ const cases: {
   },
 
   {
+    operation: 'createCustomerStatusTotals',
+    method: 'POST',
+    path: '/v1/reports/total_customers_by_status',
+    label: 'required params',
+    run: async () => {
+      const customerStatusTotals = await client.reports.createCustomerStatusTotals();
+    },
+  },
+
+  {
+    operation: 'createCustomerStatusTotals',
+    method: 'POST',
+    path: '/v1/reports/total_customers_by_status',
+    label: 'all params',
+    run: async () => {
+      const customerStatusTotals = await client.reports.createCustomerStatusTotals({
+        'Straddle-Account-Id': '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+        'Request-Id': 'requestId',
+        'Correlation-Id': 'correlationId',
+      });
+    },
+  },
+
+  {
     operation: 'retrieve',
     method: 'GET',
     path: '/v1/charges/{id}',
@@ -1805,7 +1904,9 @@ const cases: {
     path: '/v1/charges/{id}/refund',
     label: 'required params',
     run: async () => {
-      const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+      const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+        amount: 5000,
+      });
     },
   },
 
@@ -2170,7 +2271,9 @@ const cases: {
     path: '/v1/payouts/{id}/hold',
     label: 'required params',
     run: async () => {
-      const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+      const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+        reason: '',
+      });
     },
   },
 
@@ -2196,7 +2299,9 @@ const cases: {
     path: '/v1/payouts/{id}/release',
     label: 'required params',
     run: async () => {
-      const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+      const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+        reason: '',
+      });
     },
   },
 
@@ -2222,7 +2327,9 @@ const cases: {
     path: '/v1/payouts/{id}/cancel',
     label: 'required params',
     run: async () => {
-      const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+      const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+        reason: '',
+      });
     },
   },
 

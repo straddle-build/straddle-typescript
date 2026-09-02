@@ -8457,6 +8457,115 @@
       }
     },
     {
+      "name": "customer_status_totals",
+      "source": "customer_status_totals",
+      "publicAliases": [],
+      "deprecated": false,
+      "type": {
+        "kind": "object",
+        "properties": [
+          {
+            "name": "verified",
+            "publicName": "verified",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pending",
+            "publicName": "pending",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "review",
+            "publicName": "review",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "inactive",
+            "publicName": "inactive",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "rejected",
+            "publicName": "rejected",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "customer_status_totals_response",
+      "source": "customer_status_totals_response",
+      "publicAliases": [],
+      "deprecated": false,
+      "type": {
+        "kind": "object",
+        "properties": [
+          {
+            "name": "meta",
+            "publicName": "meta",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "ref",
+              "name": "response_metadata"
+            }
+          },
+          {
+            "name": "response_type",
+            "publicName": "response_type",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "ref",
+              "name": "response_type"
+            }
+          },
+          {
+            "name": "data",
+            "publicName": "data",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "ref",
+              "name": "customer_status_totals"
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
       "name": "update_customer_request",
       "source": "update_customer_request",
       "publicAliases": [],
@@ -11266,19 +11375,11 @@
           {
             "name": "reason",
             "publicName": "reason",
-            "required": false,
+            "required": true,
             "deprecated": false,
             "type": {
-              "kind": "union",
-              "variants": [
-                {
-                  "kind": "primitive",
-                  "type": "string"
-                },
-                {
-                  "kind": "null"
-                }
-              ]
+              "kind": "primitive",
+              "type": "string"
             }
           }
         ],
@@ -12210,6 +12311,112 @@
           {
             "name": "phone",
             "publicName": "phone",
+            "required": false,
+            "deprecated": false,
+            "type": {
+              "kind": "union",
+              "variants": [
+                {
+                  "kind": "primitive",
+                  "type": "string"
+                },
+                {
+                  "kind": "null"
+                }
+              ]
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "create_tan_paykey_request",
+      "source": "create_tan_paykey_request",
+      "publicAliases": [],
+      "deprecated": false,
+      "type": {
+        "kind": "object",
+        "properties": [
+          {
+            "name": "customer_id",
+            "publicName": "customer_id",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "routing_number",
+            "publicName": "routing_number",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "string"
+            }
+          },
+          {
+            "name": "tan",
+            "publicName": "tan",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "string"
+            }
+          },
+          {
+            "name": "account_type",
+            "publicName": "account_type",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "ref",
+              "name": "account_type"
+            }
+          },
+          {
+            "name": "metadata",
+            "publicName": "metadata",
+            "required": false,
+            "deprecated": false,
+            "type": {
+              "kind": "union",
+              "variants": [
+                {
+                  "kind": "record",
+                  "value": {
+                    "kind": "primitive",
+                    "type": "string"
+                  },
+                  "propertyNames": {
+                    "kind": "primitive",
+                    "type": "string"
+                  }
+                },
+                {
+                  "kind": "null"
+                }
+              ]
+            }
+          },
+          {
+            "name": "config",
+            "publicName": "config",
+            "required": false,
+            "deprecated": false,
+            "type": {
+              "kind": "ref",
+              "name": "paykey_configuration"
+            }
+          },
+          {
+            "name": "external_id",
+            "publicName": "external_id",
             "required": false,
             "deprecated": false,
             "type": {
@@ -17245,6 +17452,92 @@
       }
     },
     {
+      "name": "create_speedchex_paykey_request",
+      "source": "create_speedchex_paykey_request",
+      "publicAliases": [],
+      "deprecated": false,
+      "type": {
+        "kind": "object",
+        "properties": [
+          {
+            "name": "customer_id",
+            "publicName": "customer_id",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "speedchex_token",
+            "publicName": "speedchex_token",
+            "required": true,
+            "deprecated": false,
+            "type": {
+              "kind": "primitive",
+              "type": "string"
+            }
+          },
+          {
+            "name": "metadata",
+            "publicName": "metadata",
+            "required": false,
+            "deprecated": false,
+            "type": {
+              "kind": "union",
+              "variants": [
+                {
+                  "kind": "record",
+                  "value": {
+                    "kind": "primitive",
+                    "type": "string"
+                  },
+                  "propertyNames": {
+                    "kind": "primitive",
+                    "type": "string"
+                  }
+                },
+                {
+                  "kind": "null"
+                }
+              ]
+            }
+          },
+          {
+            "name": "config",
+            "publicName": "config",
+            "required": false,
+            "deprecated": false,
+            "type": {
+              "kind": "ref",
+              "name": "paykey_configuration"
+            }
+          },
+          {
+            "name": "external_id",
+            "publicName": "external_id",
+            "required": false,
+            "deprecated": false,
+            "type": {
+              "kind": "union",
+              "variants": [
+                {
+                  "kind": "primitive",
+                  "type": "string"
+                },
+                {
+                  "kind": "null"
+                }
+              ]
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    },
+    {
       "name": "paykey_balance_event_details",
       "source": "paykey_balance_event_details",
       "publicAliases": [],
@@ -19075,7 +19368,7 @@
           {
             "name": "amount",
             "publicName": "amount",
-            "required": false,
+            "required": true,
             "deprecated": false,
             "extensions": {
               "source": [
@@ -19477,6 +19770,7 @@
     "customers.review",
     "paykeys",
     "paykeys.review",
+    "reports",
     "charges",
     "fundingEvents",
     "payments",
@@ -19494,6 +19788,7 @@
     "customers.review",
     "paykeys",
     "paykeys.review",
+    "reports",
     "charges",
     "fundingEvents",
     "payments",
@@ -19836,7 +20131,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -20102,7 +20397,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -20642,7 +20937,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -21147,7 +21442,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -21709,7 +22004,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -22255,7 +22550,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -23186,7 +23481,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -23986,7 +24281,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -24574,7 +24869,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -25320,7 +25615,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -25588,7 +25883,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -25844,7 +26139,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -25869,6 +26164,286 @@
       },
       "responseModel": {
         "name": "bridge_token_response",
+        "publicAliases": []
+      },
+      "result": {
+        "successStatus": "201",
+        "errorStatuses": [
+          "400",
+          "401",
+          "403",
+          "422",
+          "500"
+        ]
+      },
+      "errorResponses": [
+        {
+          "status": "400",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "401",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "403",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "422",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "500",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        }
+      ],
+      "responseLinks": [],
+      "transport": "http"
+    },
+    {
+      "resource": "bridge",
+      "publicResource": "bridge",
+      "operation": "createTanPaykey",
+      "publicOperation": "createTanPaykey",
+      "deprecated": false,
+      "method": "POST",
+      "path": "/v1/bridge/tan",
+      "pathParams": [],
+      "publicPathParams": [],
+      "queryParams": [],
+      "publicQueryParams": [],
+      "headerParams": [
+        "Straddle-Account-Id",
+        "Request-Id",
+        "Correlation-Id",
+        "Idempotency-Key"
+      ],
+      "publicHeaderParams": [
+        "Straddle-Account-Id",
+        "Request-Id",
+        "Correlation-Id",
+        "Idempotency-Key"
+      ],
+      "bodyParams": [
+        "customer_id",
+        "routing_number",
+        "tan",
+        "account_type",
+        "metadata",
+        "config",
+        "external_id"
+      ],
+      "publicBodyParams": [
+        "customer_id",
+        "routing_number",
+        "tan",
+        "account_type",
+        "metadata",
+        "config",
+        "external_id"
+      ],
+      "bodyParamDetails": [
+        {
+          "name": "customer_id",
+          "required": true
+        },
+        {
+          "name": "routing_number",
+          "required": true
+        },
+        {
+          "name": "tan",
+          "required": true
+        },
+        {
+          "name": "account_type",
+          "required": true
+        },
+        {
+          "name": "metadata",
+          "required": false
+        },
+        {
+          "name": "config",
+          "required": false
+        },
+        {
+          "name": "external_id",
+          "required": false
+        }
+      ],
+      "pathParamDetails": [],
+      "queryParamDetails": [],
+      "headerParamDetails": [
+        {
+          "name": "Straddle-Account-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        },
+        {
+          "name": "Request-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        },
+        {
+          "name": "Correlation-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        },
+        {
+          "name": "Idempotency-Key",
+          "required": false,
+          "style": "form",
+          "explode": true
+        }
+      ],
+      "cookieParams": [],
+      "publicCookieParams": [],
+      "cookieParamDetails": [],
+      "paramsModel": {
+        "publicName": "BridgeCreateTanPaykeyParams"
+      },
+      "requestBody": {
+        "contentType": "application/*+json",
+        "encoding": "json",
+        "contents": [
+          {
+            "contentType": "application/*+json",
+            "encoding": "json"
+          },
+          {
+            "contentType": "text/json",
+            "encoding": "text"
+          },
+          {
+            "contentType": "application/*+json",
+            "encoding": "json"
+          }
+        ],
+        "required": false,
+        "publicName": "body",
+        "publicIdentifier": "body"
+      },
+      "response": {
+        "status": "201",
+        "contentType": "text/plain",
+        "encoding": "text",
+        "contents": [
+          {
+            "contentType": "text/plain",
+            "encoding": "text"
+          },
+          {
+            "contentType": "application/json",
+            "encoding": "json"
+          },
+          {
+            "contentType": "text/json",
+            "encoding": "json"
+          }
+        ]
+      },
+      "responseModel": {
+        "name": "revealed_paykey_response",
         "publicAliases": []
       },
       "result": {
@@ -26112,7 +26687,275 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
+        "publicName": "body",
+        "publicIdentifier": "body"
+      },
+      "response": {
+        "status": "201",
+        "contentType": "text/plain",
+        "encoding": "text",
+        "contents": [
+          {
+            "contentType": "text/plain",
+            "encoding": "text"
+          },
+          {
+            "contentType": "application/json",
+            "encoding": "json"
+          },
+          {
+            "contentType": "text/json",
+            "encoding": "json"
+          }
+        ]
+      },
+      "responseModel": {
+        "name": "revealed_paykey_response",
+        "publicAliases": []
+      },
+      "result": {
+        "successStatus": "201",
+        "errorStatuses": [
+          "400",
+          "401",
+          "403",
+          "422",
+          "500"
+        ]
+      },
+      "errorResponses": [
+        {
+          "status": "400",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "401",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "403",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "422",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "500",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        }
+      ],
+      "responseLinks": [],
+      "transport": "http"
+    },
+    {
+      "resource": "bridge",
+      "publicResource": "bridge",
+      "operation": "createSpeedchexPaykey",
+      "publicOperation": "createSpeedchexPaykey",
+      "deprecated": false,
+      "method": "POST",
+      "path": "/v1/bridge/speedchex",
+      "pathParams": [],
+      "publicPathParams": [],
+      "queryParams": [],
+      "publicQueryParams": [],
+      "headerParams": [
+        "Straddle-Account-Id",
+        "Request-Id",
+        "Correlation-Id",
+        "Idempotency-Key"
+      ],
+      "publicHeaderParams": [
+        "Straddle-Account-Id",
+        "Request-Id",
+        "Correlation-Id",
+        "Idempotency-Key"
+      ],
+      "bodyParams": [
+        "customer_id",
+        "speedchex_token",
+        "metadata",
+        "config",
+        "external_id"
+      ],
+      "publicBodyParams": [
+        "customer_id",
+        "speedchex_token",
+        "metadata",
+        "config",
+        "external_id"
+      ],
+      "bodyParamDetails": [
+        {
+          "name": "customer_id",
+          "required": true
+        },
+        {
+          "name": "speedchex_token",
+          "required": true
+        },
+        {
+          "name": "metadata",
+          "required": false
+        },
+        {
+          "name": "config",
+          "required": false
+        },
+        {
+          "name": "external_id",
+          "required": false
+        }
+      ],
+      "pathParamDetails": [],
+      "queryParamDetails": [],
+      "headerParamDetails": [
+        {
+          "name": "Straddle-Account-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        },
+        {
+          "name": "Request-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        },
+        {
+          "name": "Correlation-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        },
+        {
+          "name": "Idempotency-Key",
+          "required": false,
+          "style": "form",
+          "explode": true
+        }
+      ],
+      "cookieParams": [],
+      "publicCookieParams": [],
+      "cookieParamDetails": [],
+      "paramsModel": {
+        "publicName": "BridgeCreateSpeedchexPaykeyParams"
+      },
+      "requestBody": {
+        "contentType": "application/*+json",
+        "encoding": "json",
+        "contents": [
+          {
+            "contentType": "application/*+json",
+            "encoding": "json"
+          },
+          {
+            "contentType": "text/json",
+            "encoding": "text"
+          },
+          {
+            "contentType": "application/*+json",
+            "encoding": "json"
+          }
+        ],
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -26656,7 +27499,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -27511,7 +28354,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -28473,7 +29316,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -30735,7 +31578,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -31062,6 +31905,212 @@
         },
         {
           "status": "404",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "422",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "500",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        }
+      ],
+      "responseLinks": [],
+      "transport": "http"
+    },
+    {
+      "resource": "reports",
+      "publicResource": "reports",
+      "operation": "createCustomerStatusTotals",
+      "publicOperation": "createCustomerStatusTotals",
+      "deprecated": false,
+      "method": "POST",
+      "path": "/v1/reports/total_customers_by_status",
+      "pathParams": [],
+      "publicPathParams": [],
+      "queryParams": [],
+      "publicQueryParams": [],
+      "headerParams": [
+        "Straddle-Account-Id",
+        "Request-Id",
+        "Correlation-Id"
+      ],
+      "publicHeaderParams": [
+        "Straddle-Account-Id",
+        "Request-Id",
+        "Correlation-Id"
+      ],
+      "bodyParams": [],
+      "publicBodyParams": [],
+      "bodyParamDetails": [],
+      "pathParamDetails": [],
+      "queryParamDetails": [],
+      "headerParamDetails": [
+        {
+          "name": "Straddle-Account-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        },
+        {
+          "name": "Request-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        },
+        {
+          "name": "Correlation-Id",
+          "required": false,
+          "style": "form",
+          "explode": true
+        }
+      ],
+      "cookieParams": [],
+      "publicCookieParams": [],
+      "cookieParamDetails": [],
+      "paramsModel": {
+        "publicName": "ReportCreateCustomerStatusTotalsParams"
+      },
+      "response": {
+        "status": "201",
+        "contentType": "text/plain",
+        "encoding": "text",
+        "contents": [
+          {
+            "contentType": "text/plain",
+            "encoding": "text"
+          },
+          {
+            "contentType": "application/json",
+            "encoding": "json"
+          },
+          {
+            "contentType": "text/json",
+            "encoding": "json"
+          }
+        ]
+      },
+      "responseModel": {
+        "name": "customer_status_totals_response",
+        "publicAliases": []
+      },
+      "result": {
+        "successStatus": "201",
+        "errorStatuses": [
+          "400",
+          "401",
+          "403",
+          "422",
+          "500"
+        ]
+      },
+      "errorResponses": [
+        {
+          "status": "400",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "401",
+          "contentType": "text/plain",
+          "encoding": "text",
+          "contents": [
+            {
+              "contentType": "text/plain",
+              "encoding": "text"
+            },
+            {
+              "contentType": "application/json",
+              "encoding": "json"
+            },
+            {
+              "contentType": "text/json",
+              "encoding": "json"
+            }
+          ],
+          "model": {
+            "name": "error_response",
+            "publicAliases": []
+          }
+        },
+        {
+          "status": "403",
           "contentType": "text/plain",
           "encoding": "text",
           "contents": [
@@ -31490,7 +32539,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -31788,7 +32837,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -33263,7 +34312,7 @@
       "bodyParamDetails": [
         {
           "name": "amount",
-          "required": false
+          "required": true
         },
         {
           "name": "description",
@@ -33587,7 +34636,7 @@
             "encoding": "multipart"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -34426,7 +35475,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -35753,7 +36802,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -36045,7 +37094,7 @@
             "encoding": "json"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -36239,7 +37288,7 @@
       "bodyParamDetails": [
         {
           "name": "reason",
-          "required": false
+          "required": true
         }
       ],
       "pathParamDetails": [
@@ -36494,7 +37543,7 @@
       "bodyParamDetails": [
         {
           "name": "reason",
-          "required": false
+          "required": true
         }
       ],
       "pathParamDetails": [
@@ -36749,7 +37798,7 @@
       "bodyParamDetails": [
         {
           "name": "reason",
-          "required": false
+          "required": true
         }
       ],
       "pathParamDetails": [
@@ -37565,7 +38614,7 @@
             "encoding": "multipart"
           }
         ],
-        "required": true,
+        "required": false,
         "publicName": "body",
         "publicIdentifier": "body"
       },

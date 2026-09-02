@@ -35,7 +35,9 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [Create a paykey from bank account details](#create-a-paykey-from-bank-account-details)
   - [Create a paykey from a Plaid token](#create-a-paykey-from-a-plaid-token)
   - [Create a Bridge widget session token](#create-a-bridge-widget-session-token)
+  - [Create a paykey from a TAN](#create-a-paykey-from-a-tan)
   - [Create a paykey from a Quiltt token](#create-a-paykey-from-a-quiltt-token)
+  - [Create a paykey from a Speedchex token](#create-a-paykey-from-a-speedchex-token)
 - [`Customers`](#customers)
   - [Get a customer](#get-a-customer)
   - [Update a customer](#update-a-customer)
@@ -59,6 +61,8 @@ Complete reference of every operation, grouped by resource. See [the README](./R
   - [`Paykeys Review`](#paykeys-review)
     - [Set a paykey verification decision](#set-a-paykey-verification-decision)
     - [Get a paykey review](#get-a-paykey-review)
+- [`Reports`](#reports)
+  - [Get customer status totals](#get-customer-status-totals)
 - [`Charges`](#charges)
   - [Get a charge](#get-a-charge)
   - [Update a charge](#update-a-charge)
@@ -93,7 +97,7 @@ Complete reference of every operation, grouped by resource. See [the README](./R
 ## Setup
 
 ```ts
-import StraddleAPI from '@straddlecom/straddle';
+import StraddleAPI from '@straddle/straddle';
 
 const client = new StraddleAPI({
   bearer: process.env['BEARER'], // defaults to the BEARER env var
@@ -220,10 +224,7 @@ Creates one or more capability requests for an account and returns the resulting
 | Response | [`CapabilityRequestList`](./src/resources/capability-requests.ts) |
 
 ```ts
-const capabilityRequestList = await client.capabilityRequests.create(
-  '7c9e6679-7425-40de-944b-e07fc1f90ae7',
-  {},
-);
+const capabilityRequestList = await client.capabilityRequests.create('7c9e6679-7425-40de-944b-e07fc1f90ae7');
 ```
 
 ### List capability requests
@@ -549,6 +550,24 @@ const bridgeToken = await client.bridge.createToken({
 });
 ```
 
+### Create a paykey from a TAN
+
+Creates a paykey from a tokenized account number (TAN).
+
+| Direction | Type |
+| --- | --- |
+| Request | [`BridgeCreateTanPaykeyParams`](./src/resources/bridge.ts) |
+| Response | [`RevealedPaykeyResponse`](./src/resources/bridge.ts) |
+
+```ts
+const revealedPaykey = await client.bridge.createTanPaykey({
+  customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+  routing_number: '',
+  tan: '',
+  account_type: 'checking',
+});
+```
+
 ### Create a paykey from a Quiltt token
 
 Creates a paykey from a Quiltt processor token.
@@ -562,6 +581,22 @@ Creates a paykey from a Quiltt processor token.
 const revealedPaykey = await client.bridge.createQuilttPaykey({
   customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
   quiltt_token: '',
+});
+```
+
+### Create a paykey from a Speedchex token
+
+Creates a paykey from a Speedchex token.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`BridgeCreateSpeedchexPaykeyParams`](./src/resources/bridge.ts) |
+| Response | [`RevealedPaykeyResponse`](./src/resources/bridge.ts) |
+
+```ts
+const revealedPaykey = await client.bridge.createSpeedchexPaykey({
+  customer_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
+  speedchex_token: '',
 });
 ```
 
@@ -852,6 +887,23 @@ Returns a paykey verification review, including the decision, score breakdowns, 
 const paykeyReview = await client.paykeys.review.list('7c9e6679-7425-40de-944b-e07fc1f90ae7');
 ```
 
+## `Reports`
+
+Reports provide aggregated account and customer data.
+
+### Get customer status totals
+
+Returns customer counts grouped by `status` for the scoped account.
+
+| Direction | Type |
+| --- | --- |
+| Request | [`ReportCreateCustomerStatusTotalsParams`](./src/resources/reports.ts) |
+| Response | [`CustomerStatusTotalsResponse`](./src/resources/reports.ts) |
+
+```ts
+const customerStatusTotals = await client.reports.createCustomerStatusTotals();
+```
+
 ## `Charges`
 
 Charges debit a customer's bank account through a paykey.
@@ -988,7 +1040,9 @@ Creates a payout to return funds from a paid charge to the customer's bank accou
 | Response | [`PayoutResponse`](./src/resources/charges.ts) |
 
 ```ts
-const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+const payout = await client.charges.refund('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+  amount: 5000,
+});
 ```
 
 ### Upload a proof-of-authorization document for a charge
@@ -1161,7 +1215,9 @@ Places a payout on hold to prevent submission for processing. The payout must ha
 | Request | [`PayoutHoldParams`](./src/resources/payouts.ts) |
 
 ```ts
-const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+const payout = await client.payouts.hold('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+  reason: '',
+});
 ```
 
 ### Release a payout
@@ -1173,7 +1229,9 @@ Releases a payout from `on_hold` and returns it to `created` for submission on `
 | Request | [`PayoutReleaseParams`](./src/resources/payouts.ts) |
 
 ```ts
-const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+const payout = await client.payouts.release('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+  reason: '',
+});
 ```
 
 ### Cancel a payout
@@ -1185,7 +1243,9 @@ Cancels a payout. The payout must have a status of `created`, `scheduled`, or `o
 | Request | [`PayoutCancelParams`](./src/resources/payouts.ts) |
 
 ```ts
-const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7');
+const payout = await client.payouts.cancel('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
+  reason: '',
+});
 ```
 
 ### Get an unmasked payout

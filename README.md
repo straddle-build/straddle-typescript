@@ -25,7 +25,7 @@ The full API of this library can be found in [api.md](./api.md).
 ## Installation
 
 ```sh
-npm install @straddlecom/straddle
+npm install @straddle/straddle
 ```
 
 <br />
@@ -33,7 +33,7 @@ npm install @straddlecom/straddle
 ## Usage
 
 ```ts
-import StraddleAPI from '@straddlecom/straddle';
+import StraddleAPI from '@straddle/straddle';
 
 const client = new StraddleAPI({
   bearer: process.env['BEARER'], // defaults to the BEARER env var
@@ -69,7 +69,7 @@ Declared schemes:
 Non-success responses throw generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
 
 ```ts
-import { APIError } from '@straddlecom/straddle';
+import { APIError } from '@straddle/straddle';
 
 try {
   const account = await client.accounts.retrieve('7c9e6679-7425-40de-944b-e07fc1f90ae7');
@@ -90,7 +90,7 @@ Documented error statuses: `400`, `401`, `403`, `404`, `422`, `500`.
 Configure the generated client by setting any of these options when you create it.
 
 ```ts
-import StraddleAPI from '@straddlecom/straddle';
+import StraddleAPI from '@straddle/straddle';
 
 const client = new StraddleAPI({
   timeout: 60000,

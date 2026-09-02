@@ -5,7 +5,7 @@
   "author": "Straddle API",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/straddleio/straddle-node.git"
+    "url": "git+https://github.com/straddle-build/straddle-typescript.git"
   },
   "type": "module",
   "sideEffects": false,

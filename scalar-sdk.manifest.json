@@ -1,7 +1,7 @@
 {
   "name": "StraddleApi",
   "slug": "straddleApi",
-  "generatorVersion": "0.31.1",
+  "generatorVersion": "0.32.0",
   "servers": [
     "https://{environment}.straddle.com"
   ],
@@ -11266,11 +11266,19 @@
           {
             "name": "reason",
             "publicName": "reason",
-            "required": true,
+            "required": false,
             "deprecated": false,
             "type": {
-              "kind": "primitive",
-              "type": "string"
+              "kind": "union",
+              "variants": [
+                {
+                  "kind": "primitive",
+                  "type": "string"
+                },
+                {
+                  "kind": "null"
+                }
+              ]
             }
           }
         ],
@@ -19067,7 +19075,7 @@
           {
             "name": "amount",
             "publicName": "amount",
-            "required": true,
+            "required": false,
             "deprecated": false,
             "extensions": {
               "source": [
@@ -19828,7 +19836,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -20094,7 +20102,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -20634,7 +20642,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -21139,7 +21147,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -21701,7 +21709,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -22247,7 +22255,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -23178,7 +23186,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -23978,7 +23986,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -24566,7 +24574,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -25312,7 +25320,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -25580,7 +25588,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -25836,7 +25844,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -26104,7 +26112,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -26648,7 +26656,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -27503,7 +27511,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -28465,7 +28473,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -30727,7 +30735,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -31482,7 +31490,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -31780,7 +31788,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -33255,7 +33263,7 @@
       "bodyParamDetails": [
         {
           "name": "amount",
-          "required": true
+          "required": false
         },
         {
           "name": "description",
@@ -33579,7 +33587,7 @@
             "encoding": "multipart"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -34418,7 +34426,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -35745,7 +35753,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -36037,7 +36045,7 @@
             "encoding": "json"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },
@@ -36231,7 +36239,7 @@
       "bodyParamDetails": [
         {
           "name": "reason",
-          "required": true
+          "required": false
         }
       ],
       "pathParamDetails": [
@@ -36486,7 +36494,7 @@
       "bodyParamDetails": [
         {
           "name": "reason",
-          "required": true
+          "required": false
         }
       ],
       "pathParamDetails": [
@@ -36741,7 +36749,7 @@
       "bodyParamDetails": [
         {
           "name": "reason",
-          "required": true
+          "required": false
         }
       ],
       "pathParamDetails": [
@@ -37557,7 +37565,7 @@
             "encoding": "multipart"
           }
         ],
-        "required": false,
+        "required": true,
         "publicName": "body",
         "publicIdentifier": "body"
       },

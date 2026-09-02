@@ -9,12 +9,6 @@ on:
       - main
   # Manual fallback only; nothing in the automated chain depends on dispatch.
   workflow_dispatch:
-    inputs:
-      recover_npm_1_0_0:
-        description: Publish immutable v1.0.0 to npm as latest
-        required: false
-        type: boolean
-        default: false
 
 permissions:
   contents: write
@@ -23,7 +17,6 @@ permissions:
 
 jobs:
   release-please:
-    if: ${{ !inputs.recover_npm_1_0_0 }}
     runs-on: ubuntu-latest
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
@@ -100,101 +93,3 @@ jobs:
       - run: npm install -g npm@11
       - name: Publish to npm
         run: node scripts/publish-npm.mjs
-
-  recover-npm-1-0-0:
-    if: >-
-      ${{
-        github.event_name == 'workflow_dispatch' &&
-        inputs.recover_npm_1_0_0 &&
-        github.actor == 'hello-keith' &&
-        github.ref == 'refs/heads/scalar-next'
-      }}
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    env:
-      NPM_CONFIG_REGISTRY: https://registry.npmjs.org/
-    steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-        with:
-          ref: v1.0.0
-          fetch-depth: 0
-
-      - name: Verify immutable release source
-        shell: bash
-        run: |
-          test "$GITHUB_REPOSITORY" = "straddle-build/straddle-typescript"
-          test "$(git describe --tags --exact-match)" = "v1.0.0"
-          test ! -f .npmrc
-
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: 24.20.0
-
-      - name: Install verified npm version
-        shell: bash
-        run: |
-          npm install -g npm@11.19.1
-          test "$(node --version)" = "v24.20.0"
-          test "$(npm --version)" = "11.19.1"
-
-      - name: Build immutable release
-        run: |
-          npm install
-          npm run build
-
-      - name: Pack and verify immutable package
-        id: package
-        shell: bash
-        run: |
-          if npm view @straddlecom/straddle@1.0.0 version >/dev/null 2>&1; then
-            echo "::error::npm already contains @straddlecom/straddle@1.0.0"
-            exit 1
-          fi
-
-          npm pack --json > npm-pack.json
-          package_file="$(jq -r '.[0].filename' npm-pack.json)"
-          integrity="$(jq -r '.[0].integrity' npm-pack.json)"
-          test -n "$package_file"
-          test -n "$integrity"
-
-          tar -xOf "./$package_file" package/package.json > packed-package.json
-          jq -e '
-            .name == "@straddlecom/straddle" and
-            .version == "1.0.0" and
-            .repository.type == "git" and
-            .repository.url == "git+https://github.com/straddle-build/straddle-typescript.git"
-          ' packed-package.json
-
-          echo "filename=$package_file" >> "$GITHUB_OUTPUT"
-          echo "integrity=$integrity" >> "$GITHUB_OUTPUT"
-
-      - name: Publish immutable package as latest
-        run: >-
-          npm publish "./${{ steps.package.outputs.filename }}"
-          --access public
-          --tag latest
-          --registry https://registry.npmjs.org/
-
-      - name: Verify npm package integrity and provenance
-        shell: bash
-        env:
-          EXPECTED_INTEGRITY: ${{ steps.package.outputs.integrity }}
-        run: |
-          for attempt in $(seq 1 12); do
-            actual_integrity="$(npm view @straddlecom/straddle@1.0.0 dist.integrity --json 2>/dev/null | tr -d '"')"
-            latest="$(npm view @straddlecom/straddle dist-tags.latest --json 2>/dev/null | tr -d '"')"
-            provenance="$(npm view @straddlecom/straddle@1.0.0 dist.attestations.provenance.predicateType --json 2>/dev/null | tr -d '"')"
-
-            if [ "$actual_integrity" = "$EXPECTED_INTEGRITY" ] &&
-              [ "$latest" = "1.0.0" ] &&
-              [ "$provenance" = "https://slsa.dev/provenance/v1" ]; then
-              exit 0
-            fi
-
-            sleep 5
-          done
-
-          echo "::error::Published npm metadata did not match the verified package"
-          exit 1

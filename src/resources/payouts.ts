@@ -772,7 +772,6 @@ export interface PayoutUploadAuthorizationProofParams {
   'Idempotency-Key'?: string;
   /**
    * Body param: The document file to upload as proof of authorization for this payout. Supported file types are PDF (.pdf), PNG (.png), JPEG (.jpg, .jpeg), Word (.doc), and Word (.docx), with a maximum file size of 10 MiB (10,485,760 bytes). Empty (0-byte) files are rejected. Uploaded files are validated for matching file signatures (magic bytes) and file extension agreement.
-   * @format binary
    */
   File: Uploadable;
 }

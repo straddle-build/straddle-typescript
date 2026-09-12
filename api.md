@@ -647,11 +647,10 @@ const customer = await client.customers.create({
   name: 'Ron Swanson',
   type: 'individual',
   email: 'ron.swanson@pawnee.com',
-  address: { address1: '123 Main St', city: 'Anytown', state: 'CA', zip: '94105' },
   phone: '+12128675309',
-  external_id: 'customer_123',
-  device: { ip_address: '192.168.1.1' },
-  metadata: {},
+  device: {
+    ip_address: '192.168.1.1',
+  },
 });
 ```
 
@@ -1002,7 +1001,7 @@ Uploads a proof-of-authorization document for a charge. A later upload adds anot
 
 ```ts
 const charge = await client.charges.uploadAuthorizationProof('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-  File: '',
+  File: new File(['file'], 'file'),
 });
 ```
 
@@ -1223,7 +1222,7 @@ Uploads a proof-of-authorization document for a payout. A later upload adds anot
 
 ```ts
 const payout = await client.payouts.uploadAuthorizationProof('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-  File: '',
+  File: new File(['file'], 'file'),
 });
 ```
 

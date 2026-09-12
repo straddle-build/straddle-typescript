@@ -6,8 +6,8 @@ import { pathToFileURL } from 'node:url';
 const ACCESS = 'public';
 
 /**
- * Dist-tag a stable release lands on, from `publish.npm.tag`. `null` leaves npm on its own default,
- * `latest`. A prerelease derives its own tag below and never reads this.
+ * Dist-tag a stable release lands on, from `publish.npm.tag`. `null` uses `latest`.
+ * A prerelease derives its own tag below and never reads this.
  */
 const STABLE_DIST_TAG = null;
 
@@ -37,7 +37,7 @@ export const npmDistTagForVersion = (version) => {
 /** Runs one npm command with inherited CI credentials and output. */
 const runNpm = (args, stdio = 'inherit') => spawnSync('npm', args, { stdio });
 
-/** Publishes the repository package once, applying a derived prerelease dist-tag when needed. */
+/** Publishes the repository package once with an explicit npm dist-tag. */
 export const publishNpm = (runner = runNpm, metadata = readPackageMetadata()) => {
   const { name, version } = metadata;
   const packageSpec = `${name}@${version}`;
@@ -61,14 +61,12 @@ export const publishNpm = (runner = runNpm, metadata = readPackageMetadata()) =>
   const stableTags = [STABLE_DIST_TAG ?? 'latest', 'latest'];
   const tag =
     derived === undefined
-      ? STABLE_DIST_TAG
+      ? (STABLE_DIST_TAG ?? 'latest')
       : stableTags.includes(derived)
         ? `${derived}-prerelease`
         : derived;
-  const args = ['publish', '--access', ACCESS, ...(tag ? ['--tag', tag] : [])];
-  console.log(
-    tag ? `Publishing ${packageSpec} to npm with dist-tag ${tag}` : `Publishing ${packageSpec} to npm`,
-  );
+  const args = ['publish', '--access', ACCESS, '--tag', tag];
+  console.log(`Publishing ${packageSpec} to npm with dist-tag ${tag}`);
   const result = runner(args);
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`npm publish failed with exit code ${result.status ?? 'unknown'}`);

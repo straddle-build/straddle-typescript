@@ -395,7 +395,7 @@ const cases: {
         },
         metadata: {},
         platform_id: '7c9e6679-7425-40de-944b-e07fc1f90ae7',
-        purposes: [],
+        purposes: ['charges'],
         description: '',
       });
     },
@@ -1138,11 +1138,10 @@ const cases: {
         name: 'Ron Swanson',
         type: 'individual',
         email: 'ron.swanson@pawnee.com',
-        address: { address1: '123 Main St', city: 'Anytown', state: 'CA', zip: '94105' },
         phone: '+12128675309',
-        external_id: 'customer_123',
-        device: { ip_address: '192.168.1.1' },
-        metadata: {},
+        device: {
+          ip_address: '192.168.1.1',
+        },
       });
     },
   },
@@ -1161,14 +1160,22 @@ const cases: {
         name: 'Ron Swanson',
         type: 'individual',
         email: 'ron.swanson@pawnee.com',
-        address: { address1: '123 Main St', city: 'Anytown', state: 'CA', zip: '94105' },
+        address: {
+          address1: '123 Main St',
+          address2: 'Apt 1',
+          city: 'Anytown',
+          state: 'CA',
+          zip: '12345',
+        },
         phone: '+12128675309',
         compliance_profile: {
           ssn: '123-45-6789',
           dob: '1969-04-20',
         },
         external_id: 'customer_123',
-        device: { ip_address: '192.168.1.1' },
+        device: {
+          ip_address: '192.168.1.1',
+        },
         metadata: {},
         config: {
           sandbox_outcome: 'standard',
@@ -1836,7 +1843,7 @@ const cases: {
     label: 'required params',
     run: async () => {
       const charge = await client.charges.uploadAuthorizationProof('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-        File: '',
+        File: new File(['file'], 'file'),
       });
     },
   },
@@ -1852,7 +1859,7 @@ const cases: {
         'Request-Id': 'requestId',
         'Correlation-Id': 'correlationId',
         'Idempotency-Key': 'idempotencyKey',
-        File: '',
+        File: new File(['file'], 'file'),
       });
     },
   },
@@ -2301,7 +2308,7 @@ const cases: {
     label: 'required params',
     run: async () => {
       const payout = await client.payouts.uploadAuthorizationProof('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-        File: '',
+        File: new File(['file'], 'file'),
       });
     },
   },
@@ -2317,7 +2324,7 @@ const cases: {
         'Request-Id': 'requestId',
         'Correlation-Id': 'correlationId',
         'Idempotency-Key': 'idempotencyKey',
-        File: '',
+        File: new File(['file'], 'file'),
       });
     },
   },
@@ -2346,6 +2353,17 @@ const cases: {
   },
 ];
 
+/**
+ * How many cases run at once, capped at the number of cases there are.
+ *
+ * SCALAR_SMOKE_CONCURRENCY overrides the default; anything unparseable falls back to it.
+ */
+const smokeConcurrency = (caseCount: number): number => {
+  const override = Number.parseInt(process.env['SCALAR_SMOKE_CONCURRENCY'] ?? '', 10);
+  const limit = Number.isInteger(override) && override > 0 ? override : 32;
+  return Math.min(limit, caseCount);
+};
+
 const main = async (): Promise<void> => {
   // SCALAR_SMOKE_FILTER (comma-separated) keeps only cases whose operation name or path matches
   // one of the needles, so a caller can smoke-test a subset. With no filter, every case runs.
@@ -2363,10 +2381,18 @@ const main = async (): Promise<void> => {
         )
       : cases;
 
-  // Run every selected case concurrently. Promise.allSettled means one failing operation never
-  // blocks the others, so a single run reports the status of every endpoint.
-  const settled = await Promise.allSettled(
-    selected.map(async (testCase): Promise<SmokeResult> => {
+  // Run the selected cases under a bounded worker pool rather than all at once. A large SDK has
+  // hundreds of operations, and firing every request together exceeds what the client's transport
+  // keeps connections for while the runner is already busy with other targets. Each worker pulls
+  // the next index off a shared cursor and writes into a pre-sized array, so results stay in case
+  // order however the workers interleave. The per-case body catches everything and never rejects,
+  // so one failing operation still cannot block the others.
+  const results: SmokeResult[] = new Array<SmokeResult>(selected.length);
+  let cursor = 0;
+  const runNext = async (): Promise<void> => {
+    for (let index = cursor++; index < selected.length; index = cursor++) {
+      const testCase = selected[index];
+      if (!testCase) continue;
       const startedAt = Date.now();
       // `label` distinguishes the required-params run from the all-params run of the same
       // operation; it is omitted entirely when the operation contributed only one case.
@@ -2378,28 +2404,20 @@ const main = async (): Promise<void> => {
       };
       try {
         await testCase.run();
-        return { ...identity, status: 'passed', durationMs: Date.now() - startedAt };
+        results[index] = { ...identity, status: 'passed', durationMs: Date.now() - startedAt };
       } catch (error) {
         // Prefer the stack so a failure points at the failing SDK call; fall back to the message.
         const message = error instanceof Error ? (error.stack ?? error.message) : String(error);
-        return { ...identity, status: 'failed', durationMs: Date.now() - startedAt, error: message };
-      }
-    }),
-  );
-
-  // allSettled never rejects, but defensively map any rejected slot to a failed result.
-  const results: SmokeResult[] = settled.map((result) =>
-    result.status === 'fulfilled'
-      ? result.value
-      : {
-          operation: 'unknown',
-          method: '',
-          path: '',
+        results[index] = {
+          ...identity,
           status: 'failed',
-          durationMs: 0,
-          error: String(result.reason),
-        },
-  );
+          durationMs: Date.now() - startedAt,
+          error: message,
+        };
+      }
+    }
+  };
+  await Promise.all(Array.from({ length: smokeConcurrency(selected.length) }, runNext));
   const failed = results.filter((result) => result.status === 'failed');
 
   // With SCALAR_SMOKE_REPORT set, write a machine-readable report; otherwise print a table.

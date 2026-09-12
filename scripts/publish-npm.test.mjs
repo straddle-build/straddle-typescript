@@ -17,3 +17,15 @@ test('publishes a stable version with the latest dist-tag', () => {
     [['publish', '--access', 'public', '--tag', 'latest'], undefined],
   ]);
 });
+
+test('keeps prereleases off the latest dist-tag', () => {
+  const calls = [];
+  const runner = (args) => {
+    calls.push(args);
+    return { status: calls.length === 1 ? 1 : 0 };
+  };
+
+  publishNpm(runner, { name: '@straddlecom/straddle', version: '1.0.0-latest.1' });
+
+  assert.deepEqual(calls[1], ['publish', '--access', 'public', '--tag', 'latest-prerelease']);
+});

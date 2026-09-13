@@ -384,7 +384,7 @@ export class Charges extends APIResource {
    * @example
    * ```ts
    * const charge = await client.charges.uploadAuthorizationProof('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-   *   File: '',
+   *   File: new File(['file'], 'file'),
    * });
    * ```
    */
@@ -743,6 +743,16 @@ export interface Payout {
    */
   config: PayoutConfiguration;
   /**
+   * Timestamp when this payout was created.
+   * @format date-time
+   */
+  created_at: string;
+  /**
+   * Timestamp when this payout was last updated.
+   * @format date-time
+   */
+  updated_at: string;
+  /**
    * The current status of the payout.
    */
   status: PaymentStatus;
@@ -786,16 +796,6 @@ export interface Payout {
    * Information about the paykey used for the payout.
    */
   paykey_details?: PaykeyDetails;
-  /**
-   * Timestamp when this payout was created.
-   * @format date-time
-   */
-  created_at?: string | null;
-  /**
-   * Timestamp when this payout was last updated.
-   * @format date-time
-   */
-  updated_at?: string | null;
   /**
    * Timestamp when this payout was submitted to the payment network. Null until processed.
    * @format date-time
@@ -1350,7 +1350,6 @@ export interface ChargeUploadAuthorizationProofParams {
   'Idempotency-Key'?: string;
   /**
    * Body param: The document file to upload as proof of authorization for this charge. Supported file types are PDF (.pdf), PNG (.png), JPEG (.jpg, .jpeg), Word (.doc), and Word (.docx), with a maximum file size of 10 MiB (10,485,760 bytes). Empty (0-byte) files are rejected. Uploaded files are validated for matching file signatures (magic bytes) and file extension agreement.
-   * @format binary
    */
   File: Uploadable;
 }

@@ -1,5 +1,100 @@
 # Changelog
 
+## [1.0.4](https://github.com/straddle-build/straddle-typescript/compare/v1.0.0...v1.0.4) (2026-09-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** 16 breaking changes to the SDK surface.
+    - Response content type of `bridge.createBankAccountPaykey` changed from `text/plain` to `application/json`.
+    - `400` error response of `bridge.createBankAccountPaykey` changed from `error_response` to `error_response`.
+    - Response content type of `customers.create` changed from `text/plain` to `application/json`.
+    - `400` error response of `customers.create` changed from `error_response` to `error_response`.
+    - Response content type of `charges.create` changed from `text/plain` to `application/json`.
+    - `400` error response of `charges.create` changed from `error_response` to `error_response`.
+    - Response content type of `payouts.create` changed from `text/plain` to `application/json`.
+    - `400` error response of `payouts.create` changed from `error_response` to `error_response`.
+    - Property `payout.created_at` is now required.
+    - Property `payout.created_at` type changed from `string<date-time> | null` to `string<date-time>`.
+    - Property `payout.updated_at` is now required.
+    - Property `payout.updated_at` type changed from `string<date-time> | null` to `string<date-time>`.
+    - Property `unmasked_payout.created_at` is now required.
+    - Property `unmasked_payout.created_at` type changed from `string<date-time> | null` to `string<date-time>`.
+    - Property `unmasked_payout.updated_at` is now required.
+    - Property `unmasked_payout.updated_at` type changed from `string<date-time> | null` to `string<date-time>`.
+* **api:** 4 breaking changes to the SDK surface.
+    - Property `embed_error_response.data` type changed from `unknown | null` to `unknown`.
+    - Schema `customer_address` shape changed.
+    - Schema `unmasked_compliance_profile` shape changed.
+    - Schema `compliance_profile` shape changed.
+* **api:** 34 breaking changes to the SDK surface.
+    - Request body of `accounts.update` is now required.
+    - Request body of `accounts.create` is now required.
+    - Request body of `accounts.onboard` is now required.
+    - Request body of `capabilityRequests.create` is now required.
+    - Request body of `linkedBankAccounts.create` is now required.
+    - Request body of `linkedBankAccounts.update` is now required.
+    - Request body of `organizations.create` is now required.
+    - Request body of `representatives.create` is now required.
+    - Request body of `representatives.update` is now required.
+    - Request body of `bridge.createBankAccountPaykey` is now required.
+    - Request body of `bridge.createPlaidPaykey` is now required.
+    - Request body of `bridge.createToken` is now required.
+    - Request body of `bridge.createQuilttPaykey` is now required.
+    - Request body of `customers.update` is now required.
+    - Request body of `customers.create` is now required.
+    - Request body of `customers.review.setVerificationDecision` is now required.
+    - Request body of `paykeys.review.setVerificationDecision` is now required.
+    - Request body of `charges.update` is now required.
+    - Request body of `charges.create` is now required.
+    - Request body of `charges.uploadAuthorizationProof` is now required.
+    - Request body of `fundingEvents.simulate` is now required.
+    - Request body of `payouts.update` is now required.
+    - Request body of `payouts.create` is now required.
+    - Request body of `payouts.uploadAuthorizationProof` is now required.
+    - Removed operation `bridge.createTanPaykey` (`POST /v1/bridge/tan`).
+    - Removed operation `bridge.createSpeedchexPaykey` (`POST /v1/bridge/speedchex`).
+    - Removed operation `reports.createCustomerStatusTotals` (`POST /v1/reports/total_customers_by_status`).
+    - Property `update_payout_status_request.reason` is no longer required.
+    - Property `update_payout_status_request.reason` type changed from `string` to `string | null`.
+    - Property `refund_charge_request.amount` is no longer required.
+    - Removed schema `customer_status_totals`.
+    - Removed schema `customer_status_totals_response`.
+    - Removed schema `create_tan_paykey_request`.
+    - Removed schema `create_speedchex_paykey_request`.
+* **api:** 7 breaking changes to the SDK surface.
+    - Body field `amount` on `charges.refund` is now required.
+    - Body field `reason` on `payouts.hold` is now required.
+    - Body field `reason` on `payouts.release` is now required.
+    - Body field `reason` on `payouts.cancel` is now required.
+    - Property `update_payout_status_request.reason` is now required.
+    - Property `update_payout_status_request.reason` type changed from `string | null` to `string`.
+    - Property `refund_charge_request.amount` is now required.
+
+### Features
+
+* **api:** update property embed_error_response.data (+3 more changes) ([4ad658e](https://github.com/straddle-build/straddle-typescript/commit/4ad658ecfa4114c67f909a6e958dcf68a8d77c0e))
+* **api:** update request body of accounts.update (+33 more changes) ([9dac789](https://github.com/straddle-build/straddle-typescript/commit/9dac78995bbf86ae0144fa029c335f108c0f2cd8))
+* **api:** update SDK surface (14 changes) ([2d3e5e0](https://github.com/straddle-build/straddle-typescript/commit/2d3e5e0f34bb3c2388d0550cc9b669d7388f835c))
+* **api:** update SDK surface (17 changes) ([096e145](https://github.com/straddle-build/straddle-typescript/commit/096e145515fed87c9f479e46978572b5153edf8e))
+
+
+### Bug Fixes
+
+* preserve npm release safeguards during SDK sync ([bbb891b](https://github.com/straddle-build/straddle-typescript/commit/bbb891b9b064ee2482ca033e34041a93e70f15e1))
+* preserve npm safeguards across SDK regeneration ([cd8e222](https://github.com/straddle-build/straddle-typescript/commit/cd8e22226aa6a2010548464cd7baef7763610563))
+* recover npm 1.0 publishing ([#3](https://github.com/straddle-build/straddle-typescript/issues/3)) ([0ff7206](https://github.com/straddle-build/straddle-typescript/commit/0ff7206aaaa830f5a1deb6d515320001f5e18846))
+
+
+### Chores
+
+* **api:** regenerate SDK ([ed0d78b](https://github.com/straddle-build/straddle-typescript/commit/ed0d78b11fcad8f8f40986f38543a514ded7128f))
+* release 1.0.3 ([b901272](https://github.com/straddle-build/straddle-typescript/commit/b901272342c7635694b14d4435250875c3539621))
+* release 1.0.3 ([17e1264](https://github.com/straddle-build/straddle-typescript/commit/17e12642fc1784eff071a753a32f88cdac31ba21))
+* release 1.0.4 ([7035307](https://github.com/straddle-build/straddle-typescript/commit/70353076c02ad7a9424520fea58fa4789bb45080))
+* release 1.0.4 ([842a053](https://github.com/straddle-build/straddle-typescript/commit/842a0536e8b193f5d3daf21091b34dfe9b4e5d48))
+* remove npm recovery path ([#5](https://github.com/straddle-build/straddle-typescript/issues/5)) ([1873671](https://github.com/straddle-build/straddle-typescript/commit/18736710e5d01cd4c838b7e0dd3725ca682c2f6c))
+
 ## [1.0.0](https://github.com/straddle-build/straddle-typescript/compare/v0.1.0...v1.0.0) (2026-09-02)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@straddlecom/straddle",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "description": "The Straddle API uses resource URLs, standard HTTP methods, and JSON request and response bodies.",
   "author": "Straddle API",
   "repository": {
@@ -26,8 +26,9 @@
     },
     "./*.js": {
       "types": "./dist/esm/*.d.ts",
+      "import": "./dist/esm/*.js",
       "require": "./dist/cjs/*.js",
-      "default": "./dist/cjs/*.js"
+      "default": "./dist/esm/*.js"
     },
     "./*": {
       "types": "./dist/esm/*.d.ts",

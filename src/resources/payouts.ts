@@ -345,7 +345,7 @@ export class Payouts extends APIResource {
    * @example
    * ```ts
    * const payout = await client.payouts.uploadAuthorizationProof('7c9e6679-7425-40de-944b-e07fc1f90ae7', {
-   *   File: '',
+   *   File: new File(['file'], 'file'),
    * });
    * ```
    */
@@ -430,6 +430,16 @@ export interface UnmaskedPayout {
   external_id: string;
   config: ChargesAPI.PayoutConfiguration;
   /**
+   * Timestamp when this payout was created.
+   * @format date-time
+   */
+  created_at: string;
+  /**
+   * Timestamp when this payout was last updated.
+   * @format date-time
+   */
+  updated_at: string;
+  /**
    * The current status of the `charge` or `payout`.
    */
   status: ChargesAPI.PaymentStatus;
@@ -471,16 +481,6 @@ export interface UnmaskedPayout {
    */
   customer_details?: ChargesAPI.CustomerDetails;
   paykey_details?: ChargesAPI.PaykeyDetails;
-  /**
-   * Timestamp when this payout was created.
-   * @format date-time
-   */
-  created_at?: string | null;
-  /**
-   * Timestamp when this payout was last updated.
-   * @format date-time
-   */
-  updated_at?: string | null;
   /**
    * Timestamp when this payout was submitted to the payment network. Null until processed.
    * @format date-time
@@ -772,7 +772,6 @@ export interface PayoutUploadAuthorizationProofParams {
   'Idempotency-Key'?: string;
   /**
    * Body param: The document file to upload as proof of authorization for this payout. Supported file types are PDF (.pdf), PNG (.png), JPEG (.jpg, .jpeg), Word (.doc), and Word (.docx), with a maximum file size of 10 MiB (10,485,760 bytes). Empty (0-byte) files are rejected. Uploaded files are validated for matching file signatures (magic bytes) and file extension agreement.
-   * @format binary
    */
   File: Uploadable;
 }

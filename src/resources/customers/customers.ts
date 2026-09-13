@@ -200,11 +200,10 @@ export class Customers extends APIResource {
    *   name: 'Ron Swanson',
    *   type: 'individual',
    *   email: 'ron.swanson@pawnee.com',
-   *   address: { address1: '123 Main St', city: 'Anytown', state: 'CA', zip: '94105' },
    *   phone: '+12128675309',
-   *   external_id: 'customer_123',
-   *   device: { ip_address: '192.168.1.1' },
-   *   metadata: {},
+   *   device: {
+   *     ip_address: '192.168.1.1',
+   *   },
    * });
    * ```
    */

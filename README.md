@@ -1,157 +1,155 @@
-# Straddle API
+# Straddle TypeScript SDK
 
-This library provides convenient access to the Straddle API from TypeScript or JavaScript.
+Use Straddle's Pay by Bank and Embed APIs from server-side TypeScript or JavaScript. The SDK provides typed requests and responses, authentication, retries, and access to response metadata.
 
-The full API of this library can be found in [api.md](./api.md).
+## Install
 
-<br />
-
-## Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Reference](./api.md)
-- [Authentication](#authentication)
-- [Errors](#errors)
-- [Client Options](#client-options)
-- [Request Options](#request-options)
-- [Retries and Timeouts](#retries-and-timeouts)
-- [Helpers](#helpers)
-- [Logging](#logging)
-- [Requirements](#requirements)
-
-<br />
-
-## Installation
+Use Node.js 20 or later with built-in `fetch`. The package includes TypeScript declarations and supports ESM and CommonJS.
 
 ```sh
 npm install @straddlecom/straddle
 ```
 
-<br />
+The npm package is [`@straddlecom/straddle`](https://www.npmjs.com/package/@straddlecom/straddle). Its source lives in `straddle-build/straddle-typescript`.
 
-## Usage
+## Make your first request
 
-```ts
-import StraddleAPI from '@straddlecom/straddle';
+Create a sandbox API key in the [Straddle Dashboard](https://dashboard.straddle.com), then set it in your server environment. See [API authentication](https://docs.straddle.com/api-reference/authentication) for the setup steps.
 
-const client = new StraddleAPI({
-  bearer: process.env['BEARER'], // defaults to the BEARER env var
-});
-
-const account = await client.accounts.retrieve('7c9e6679-7425-40de-944b-e07fc1f90ae7');
-
-console.log(account);
+```sh
+export STRADDLE_API_KEY="YOUR_SANDBOX_API_KEY"
 ```
 
-The examples in the following sections assume a `client` configured as shown above.
+Save the following example as `quickstart.mjs`. It requests the first page of customers from the sandbox:
 
-See the [API reference](./api.md) for every available operation.
+```js
+import StraddleAPI from '@straddlecom/straddle';
 
-<br />
+const apiKey = process.env.STRADDLE_API_KEY;
+if (!apiKey) throw new Error('Set STRADDLE_API_KEY to your sandbox API key.');
 
-## Authentication
+const client = new StraddleAPI({
+  bearer: apiKey,
+  baseURL: 'https://sandbox.straddle.com',
+});
 
-Pass credentials to the generated client constructor. Environment variables are read automatically when supported by the target runtime.
+const page = await client.customers.list({ page_number: 1, page_size: 10 });
+console.log(`Customers on this page: ${page.data.length}`);
+```
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `bearer` | `string \| provider` | - | Send the API key as a bearer token in the `Authorization` header. Defaults to BEARER. |
+For a SaaS platform key, add `'Straddle-Account-Id': 'YOUR_EMBEDDED_ACCOUNT_ID'` to the `list` parameters before running the example. This selects the embedded account whose customers you want to read. Direct accounts and marketplaces list customers without that header. See [platform account scoping](https://docs.straddle.com/guides/embed/api-headers).
 
-Declared schemes:
+Run the example:
 
-- `Bearer` bearer token
+```sh
+node quickstart.mjs
+```
 
-<br />
+A successful request prints the number of customers on the page. `Customers on this page: 0` is valid for an empty account. Customer records are in `page.data`; pagination and request metadata are in `page.meta`.
 
-## Errors
+The remaining examples use this `client`.
 
-Non-success responses throw generated API errors. Error objects expose status, headers, response body, and request metadata where the target runtime supports it.
+## Configure authentication and environments
+
+The example passes `STRADDLE_API_KEY` explicitly as `bearer`. If you omit `bearer`, the client reads `BEARER`. It also accepts a function that returns a token or a promise of a token.
+
+Set `baseURL` explicitly to select an environment. If you omit it, the client reads `STRADDLE_BASE_URL`, then defaults to `https://sandbox.straddle.com`. Production uses `https://production.straddle.com` and a production API key. See [environments](https://docs.straddle.com/api-reference/environments).
+
+## Read additional pages
+
+List methods return one response page. Choose the next `page_number` using `page.meta.total_pages`, and keep your filters and account scope the same between requests:
+
+```ts
+const nextPage = await client.customers.list({ page_number: 2, page_size: 10 });
+```
+
+See the [method reference](./api.md) for each resource's filters and response types.
+
+## Handle errors
+
+Catch `APIError` to inspect an HTTP error's status, headers, and response body. Connection and timeout errors also extend `APIError`; their `status` is undefined.
 
 ```ts
 import { APIError } from '@straddlecom/straddle';
 
 try {
-  const account = await client.accounts.retrieve('7c9e6679-7425-40de-944b-e07fc1f90ae7');
-} catch (err) {
-  if (err instanceof APIError) {
-    console.log(err.status, err.name, err.headers);
+  await client.customers.list({ page_size: 10 });
+} catch (error) {
+  if (error instanceof APIError) {
+    console.error(error.status, error.message);
   }
-  throw err;
+  throw error;
 }
 ```
 
-Documented error statuses: `400`, `401`, `403`, `404`, `422`, `500`.
+For a `401`, check that the key matches the selected environment. For a `403`, check the key's permissions and account scope. The SDK also exports specific classes such as `NotFoundError`, `ConflictError`, `UnprocessableEntityError`, and `RateLimitError`. See [API errors](https://docs.straddle.com/api-reference/errors) for response details.
 
-<br />
+## Set retries and timeouts
 
-## Client Options
+The client retries connection errors, `408`, `409`, `429`, and `5xx` responses twice by default. It uses exponential backoff and honors supported `Retry-After` values. The default timeout is 60,000 milliseconds per attempt, so retries can extend the total request duration.
 
-Configure the generated client by setting any of these options when you create it.
+Override these values for an individual request:
 
 ```ts
-import StraddleAPI from '@straddlecom/straddle';
-
-const client = new StraddleAPI({
-  timeout: 60000,
-  maxRetries: 2,
-  logLevel: 'debug',
-});
+const page = await client.customers.list(
+  { page_size: 10 },
+  { timeout: 30_000, maxRetries: 0 },
+);
 ```
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `bearer` | `string \| AuthTokenProvider` | `process.env["BEARER"]` | Send the API key as a bearer token in the `Authorization` header. |
-| `baseURL` | `string \| null` | `process.env["STRADDLE_BASE_URL"]` | Override the default API base URL. Pass `null` when selecting a configured environment. |
-| `timeout` | `number` | `60000` | Maximum time in milliseconds to wait for a response before aborting a request. |
-| `maxRetries` | `number` | `2` | Number of retries for temporary failures. |
-| `defaultHeaders` | `HeadersInit` | - | Headers sent with every request. |
-| `defaultQuery` | `Record<string, string \| undefined>` | - | Query parameters sent with every request. |
-| `fetchOptions` | `RequestInit` | - | Additional fetch options sent with every request. |
-| `fetch` | `Fetch` | - | Custom fetch implementation. |
-| `logLevel` | `"off" \| "error" \| "warn" \| "info" \| "debug" \| null` | `process.env["STRADDLE_LOG"]` | Controls request and retry debug logging. |
-| `logger` | `Logger \| null` | `console` | Custom logger implementation. |
+For write operations that accept an idempotency key, pass the operation's `'Idempotency-Key'` parameter. Reuse that value when retrying the same operation. See [idempotency](https://docs.straddle.com/api-reference/idempotency).
 
-<br />
+## Inspect raw responses
 
-## Request Options
+Each method returns an `APIPromise`. Await it for parsed data, or use `.withResponse()` for both the data and the underlying `Response`:
 
-| Option | Type | Default | Description |
-| --- | --- | --- | --- |
-| `headers` | `HeadersInit` | - | Per-request headers. |
-| `query` | `Record<string, unknown>` | - | Per-request query parameters. |
-| `body` | `unknown` | - | Override the generated request body. |
-| `timeout` | `number` | - | Per-request timeout in milliseconds. |
-| `maxRetries` | `number` | - | Per-request retry count. |
-| `signal` | `AbortSignal` | - | Abort an in-flight request. |
-| `fetchOptions` | `RequestInit` | - | Per-request fetch options. |
-| `idempotencyKey` | `string` | - | Idempotency key for retry-safe operations. Applies to this request and its retries. |
+```ts
+const { data: page, response } = await client.customers
+  .list({ page_size: 10 })
+  .withResponse();
 
-<br />
+console.log(response.status, page.meta.api_request_id);
+```
 
-## Retries and Timeouts
+## Client and request options
 
-Generated clients support request timeouts and retry temporary failures such as network errors, 408, 409, 429, and 5xx responses. Retry delays honor `Retry-After` headers when present. Tune the retry and timeout client options shown above, or override them per request.
+Set these options in the client constructor.
 
-<br />
+| Option | Purpose | Default |
+| --- | --- | --- |
+| `bearer` | API key or token provider | `BEARER` |
+| `baseURL` | API base URL | `STRADDLE_BASE_URL`, then sandbox |
+| `timeout` | Timeout per attempt, in milliseconds | `60000` |
+| `maxRetries` | Retry count | `2` |
+| `defaultHeaders` | Headers sent with each request | None |
+| `defaultQuery` | Query parameters sent with each request | None |
+| `fetchOptions` | Additional fetch options | None |
+| `fetch` | Custom fetch implementation | Runtime `fetch` |
+| `logLevel` | `off`, `error`, `warn`, `info`, or `debug` | `STRADDLE_LOG`, then `warn` |
+| `logger` | Custom logger | `console` |
 
-## Helpers
+Each method also accepts a final request-options argument.
 
-- Use `.withResponse()` on any request to inspect both parsed data and the raw `Response` object.
-- Every operation returns an `APIPromise`, so you can `await` it directly or chain `.withResponse()`.
+| Option | Purpose |
+| --- | --- |
+| `headers` | Set headers for this request |
+| `query` | Add query parameters |
+| `body` | Override the request body |
+| `timeout` | Override the timeout in milliseconds |
+| `maxRetries` | Override the retry count |
+| `signal` | Cancel the request with an `AbortSignal` |
+| `fetchOptions` | Set fetch options for this request |
 
-<br />
+Set `logLevel: 'debug'` to log request details, response status and headers, and retry attempts. Supply a custom `logger` to send these logs to your logging system. Set `logLevel: 'off'` to disable SDK logging.
 
-## Logging
+## Reference and support
 
-- Set `logLevel: "debug"` to log request URLs, options, response status, response headers, and retry attempts.
-- Pass a custom `logger` to route logs into your own observability pipeline.
-- Set `logLevel: null` to disable environment-driven logging.
+Use the following resources as you build your integration:
 
-<br />
+- [SDK method reference](./api.md): operations, parameters, and response types.
+- [Straddle guides](https://docs.straddle.com): payment flows, sandbox testing, and API concepts.
+- [GitHub issues](https://github.com/straddle-build/straddle-typescript/issues): SDK bugs and feature requests.
+- [Versioning and contributions](./VERSIONING.md): submit customizations against `scalar-next` so Scalar carries them through regeneration.
+- [Security policy](./SECURITY.md) and [Apache 2.0 license](./LICENSE).
 
-## Requirements
-
-- Node.js 20+, a modern browser, or any runtime with `fetch` support
-
-Powered by Scalar.
+Straddle generates this SDK with Scalar and maintains repository customizations through the workflow in `VERSIONING.md`.

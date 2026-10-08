@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.0.5](https://github.com/straddle-build/straddle-typescript/compare/v1.0.4...v1.0.5) (2026-10-08)
+
+
+### Bug Fixes
+
+* send Idempotency-Key for the idempotencyKey request option ([c674dce](https://github.com/straddle-build/straddle-typescript/commit/c674dcef7205d8394fcca4dd0faee42f56d17ac6))
+* send Idempotency-Key header for idempotencyKey request option ([496dddf](https://github.com/straddle-build/straddle-typescript/commit/496dddf00e0596ae0820f1a87b732ea9c1d94e95))
+
+
+### Documentation
+
+* refresh TypeScript SDK quickstart and examples ([#8](https://github.com/straddle-build/straddle-typescript/issues/8)) ([c6c2735](https://github.com/straddle-build/straddle-typescript/commit/c6c273527ebb24941a4f75cc39f298e4579d7e0d))
+
 ## [1.0.4](https://github.com/straddle-build/straddle-typescript/compare/v1.0.0...v1.0.4) (2026-09-13)
 
 

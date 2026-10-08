@@ -386,7 +386,7 @@ export class StraddleAPI {
   fetchOptions: MergedRequestInit | undefined;
   private fetch: Fetch;
   #encoder: Opts.RequestEncoder;
-  protected idempotencyHeader?: string;
+  protected idempotencyHeader?: string = 'Idempotency-Key';
   private _baseURLOverridden: boolean;
   private _defaultBaseURL: string;
   private _options: ClientOptions;
@@ -918,8 +918,9 @@ export class StraddleAPI {
     url: string;
   }): Promise<Headers> {
     let idempotencyHeaders: HeadersLike = {};
-    if (this.idempotencyHeader && method !== 'get') {
-      if (!options.idempotencyKey) options.idempotencyKey = this.defaultIdempotencyKey();
+    // Send only a caller-supplied key: Straddle chose no implicit keys, and the generated default
+    // key is longer than the gateway's 10-40 character Idempotency-Key limit.
+    if (this.idempotencyHeader && options.idempotencyKey && method !== 'get') {
       idempotencyHeaders[this.idempotencyHeader] = options.idempotencyKey;
     }
 

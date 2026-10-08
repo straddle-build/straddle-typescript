@@ -97,7 +97,7 @@ const page = await client.customers.list(
 );
 ```
 
-For write operations that accept an idempotency key, pass the operation's `'Idempotency-Key'` parameter. Reuse that value when retrying the same operation. See [idempotency](https://docs.straddle.com/api-reference/idempotency).
+For write operations, pass an idempotency key in the `idempotencyKey` request option or the operation's `'Idempotency-Key'` parameter. The client sends it on its own retries; reuse the same value when you retry the operation yourself. If you set both, the parameter wins. The client does not generate a key, so a write sent without one has no duplicate protection. Keys must be 10 to 40 characters. See [idempotency](https://docs.straddle.com/api-reference/idempotency).
 
 ## Inspect raw responses
 
@@ -139,6 +139,7 @@ Each method also accepts a final request-options argument.
 | `maxRetries` | Override the retry count |
 | `signal` | Cancel the request with an `AbortSignal` |
 | `fetchOptions` | Set fetch options for this request |
+| `idempotencyKey` | Send an `Idempotency-Key` for this request and its retries |
 
 Set `logLevel: 'debug'` to log request details, response status and headers, and retry attempts. Supply a custom `logger` to send these logs to your logging system. Set `logLevel: 'off'` to disable SDK logging.
 
